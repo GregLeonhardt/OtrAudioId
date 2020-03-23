@@ -216,7 +216,6 @@ command_line(
 
         //  And get the parameter data.
         in_file_name_p = get_cmd_line_parm( argc, argv, "if" );
-printf( "-if %s\n", in_file_name_p );
     }
 
     /************************************************************************
@@ -231,7 +230,6 @@ printf( "-if %s\n", in_file_name_p );
 
         //  And get the parameter data.
         in_dir_name_p = get_cmd_line_parm( argc, argv, "id" );
-printf( "-id %s\n", in_dir_name_p );
     }
 
     /************************************************************************
@@ -246,7 +244,6 @@ printf( "-id %s\n", in_dir_name_p );
 
         //  And get the parameter data.
         out_dir_name_p = get_cmd_line_parm( argc, argv, "od" );
-printf( "-od %s\n", out_dir_name_p );
     }
 
     /************************************************************************
@@ -261,7 +258,6 @@ printf( "-od %s\n", out_dir_name_p );
 
         //  And get the parameter data.
         create_dir_name_p = get_cmd_line_parm( argc, argv, "create" );
-printf( "-create %s\n", in_file_name_p );
     }
 
     /************************************************************************
@@ -273,7 +269,6 @@ printf( "-create %s\n", in_file_name_p );
     {
         //  YES:    Set the flag
         in_line_parm |= CMD_PARM_ADD;
-printf( "-add\n" );
     }
 
     /************************************************************************
@@ -379,13 +374,6 @@ main(
     log_write( MID_INFO, "main",
                   "Starting: MP3-Real-ID Version %s %s.\n",
                   __DATE__, __TIME__ );
-
-    for ( int count = 0;
-              count < argc;
-              count ++ )
-    {
-        log_write( MID_INFO, "main", "arcv[ %d ]: '%s'\n", count, argv[ count ] );
-    }
 
     //  Log the event
     log_write( MID_INFO, "main",

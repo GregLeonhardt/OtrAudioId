@@ -158,6 +158,8 @@ mp3_process_file(
                     MP3__remove_frame( frame_l );
                 }
 
+//  @DEBUG
+#if 0
 log_write( MID_INFO, "mp3_process_file", "TENC: %s\n", id3_get_v2_tag( "TENC" ) );
 log_write( MID_INFO, "mp3_process_file", "TCON: %s\n", id3_get_v2_tag( "TCON" ) );
 log_write( MID_INFO, "mp3_process_file", "TIT2: %s\n", id3_get_v2_tag( "TIT2" ) );
@@ -166,6 +168,7 @@ log_write( MID_INFO, "mp3_process_file", "TALB: %s\n", id3_get_v2_tag( "TALB" ) 
 log_write( MID_INFO, "mp3_process_file", "TYER: %s\n", id3_get_v2_tag( "TYER" ) );
 log_write( MID_INFO, "mp3_process_file", "TRCK: %s\n", id3_get_v2_tag( "TRCK" ) );
 log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) );
+#endif
 
                 //  Move to the next step
                 state = MP3_STATE_MP3_SYNC;

@@ -169,7 +169,7 @@ add_file(
             episode_id_p = ADD__get_id_from_filename( file_info_p->file_name );
 
 //  @DEBUG
-#if 1
+#if 0
 {
     struct  show_t  show;
     struct  episode_t   episode;
