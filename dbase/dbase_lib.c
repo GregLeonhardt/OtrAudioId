@@ -217,7 +217,7 @@ DBASE__open(
                    "Database: 'otr.db' was successfully opened\n" );
     }
 #endif
-    
+
     /************************************************************************
      *  Create the NETWORK table
      ************************************************************************/
@@ -367,8 +367,8 @@ DBASE__open(
         memset( sqlite_cmd, '\0', sizeof( sqlite_cmd ) );
 
         snprintf( sqlite_cmd, sizeof( sqlite_cmd ),
-                  "CREATE TABLE IF NOT EXISTS EPISODE("
-                      "fingerprint      TEXT        PRIMARY KEY AUTOINCREMENT,"
+                  "CREATE TABLE IF NOT EXISTS FILE("
+                      "fingerprint      TEXT        PRIMARY KEY,"
                       "network_id       INTEGER,"
                       "station_id       INTEGER,"
                       "episode_id       INTEGER,"
