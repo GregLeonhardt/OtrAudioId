@@ -368,9 +368,6 @@ dbase_get_file(
         }
     }
 
-    //  Release the data buffer
-    sqlite3_free( sqlite_cmd_p );
-
     //  Finalize and release a prepared statement
     sqlite3_finalize( sqlite_res_p );
 
@@ -680,9 +677,6 @@ dbase_get_file_list(
 
         }   while( sqlite_step == SQLITE_ROW );
     }
-
-    //  Release the data buffer
-    sqlite3_free( sqlite_cmd_p );
 
     //  Finalize and release a prepared statement
     sqlite3_finalize( sqlite_res_p );

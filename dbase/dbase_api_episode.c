@@ -240,15 +240,6 @@ dbase_get_episode(
      *  Command cleanup and run
      ************************************************************************/
 
-
-    //  Build the SqLite command statement
-#if 0
-    sqlite_cmd_p = sqlite3_mprintf(
-            "SELECT episode_id, show_id, name, date, number, available "
-            "from EPISODE where name = '%q';",
-                    episode_p->name );
-#endif
-
     //  Log the database access
     log_write( MID_INFO, "dbase_get_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
@@ -297,9 +288,6 @@ dbase_get_episode(
             sqlite_rc = SQLITE_ERROR;
         }
     }
-
-    //  Release the data buffer
-    sqlite3_free( sqlite_cmd_p );
 
     //  Finalize and release a prepared statement
     sqlite3_finalize( sqlite_res_p );
@@ -531,9 +519,6 @@ dbase_get_episode_list(
 
         }   while( sqlite_step == SQLITE_ROW );
     }
-
-    //  Release the data buffer
-    sqlite3_free( sqlite_cmd_p );
 
     //  Finalize and release a prepared statement
     sqlite3_finalize( sqlite_res_p );

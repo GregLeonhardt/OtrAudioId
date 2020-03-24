@@ -285,7 +285,7 @@ add_file(
                       fingerprint[ 18 ], fingerprint[ 19 ],  0x00 );
             file.network_id = -1;
             file.station_id = -1;
-            file.episode_id = episode.show_id;
+            file.episode_id = episode.episode_id;
             strncpy( file.date_time, file_info_p->date_time, sizeof( file.date_time ) );
             file.quality    = -1;
             strncpy( file.location, file_info_p->dir_name, sizeof( file.location ) );
@@ -302,7 +302,13 @@ add_file(
             else
             {
                 //  NO:     Add this file to the dBase
-                dbase_put_file( &file );
+                add_rc = dbase_put_file( &file );
+                if ( add_rc != true )
+                {
+                    //  NO:     @ToDo   2   What to do when the FILE put fails.
+                    log_write( MID_FATAL, "add_file",
+                            "dbase_put_file failed with RD = %d\n", add_rc );
+                }
             }
         }
     }
