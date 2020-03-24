@@ -83,9 +83,9 @@
 
 /****************************************************************************/
 /**
- *  Access the database locate an episode name and return it's information
+ *  Access the database locate a show name and return it's information
  *
- *  @param  episode_p               Show information
+ *  @param  show_p                  Show information
  *
  *  @return dbase_rc                TRUE  = Record was     found.
  *                                  FALSE = Record was not found.
@@ -95,8 +95,8 @@
  ****************************************************************************/
 
 int
-dbase_get_episode(
-    struct  episode_t           *   episode_p
+DBASE__get_show(
+    struct  show_t              *   show_p
     )
 {
     /**
@@ -112,8 +112,8 @@ dbase_get_episode(
      *  Function Body
      ************************************************************************/
 
-    //  Get an episode record
-    sqlite_rc = DBASE__get_episode( episode_p );
+    //  Get the show record
+    sqlite_rc = DBASE__get_show( show_p );
 
     /************************************************************************
      *  Function Exit
@@ -125,91 +125,9 @@ dbase_get_episode(
 
 /****************************************************************************/
 /**
- *  Access the database locate an episode name and return it's information
+ *  Access the database to insert a new show.
  *
- *  @param  episode_p               Show information
- *
- *  @return dbase_rc                TRUE  = Record was     found.
- *                                  FALSE = Record was not found.
- *
- *  @note
- *
- ****************************************************************************/
-
-struct  list_base_t *
-dbase_get_episode_list(
-    struct  episode_t           *   episode_p
-    )
-{
-    /**
-     *  @param  episode_list_p  Pointer to a list of episodes               */
-    struct  list_base_t         *   episode_list_p;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Get a list of episodes
-    episode_list_p = DBASE__get_episode_list( episode_p );
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-    return( episode_list_p );
-}
-
-/****************************************************************************/
-/**
- *  Delete the episode list
- *
- *  @param  episode_list_p          The list that is to be deleted.
- *
- *  @return void                    No information is returned from this function.
- *
- *  @note
- *
- ****************************************************************************/
-
-void
-dbase_delete_episode_list(
-    struct  list_base_t         *   episode_list_p
-    )
-{
-    /**
-     *  @param  episode_p       Pointer to a new episode record             */
-    struct  episode_t           *   episode_p;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Delete a list of episodes
-    episode_list_p = DBASE__get_episode_list( episode_p );
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-}
-
-/****************************************************************************/
-/**
- *  Access the database to insert a new episode.
- *
- *  @param  episode_p               Show information
+ *  @param  show_p                  Show information
  *
  *  @return dbase_rc                TRUE  = Record was     found.
  *                                  FALSE = Record was not found.
@@ -219,8 +137,8 @@ dbase_delete_episode_list(
  ****************************************************************************/
 
 int
-dbase_put_episode(
-    struct  episode_t           *   episode_p
+DBASE__put_show(
+    struct  show_t              *   show_p
     )
 {
     /**
@@ -236,8 +154,8 @@ dbase_put_episode(
      *  Function Body
      ************************************************************************/
 
-    //  Put an episode record into the database.
-    sqlite_rc = DBASE__put_episode( episode_p );
+    //  Put the show record
+    sqlite_rc = DBASE__put_show( show_p );
 
     /************************************************************************
      *  Function Exit
