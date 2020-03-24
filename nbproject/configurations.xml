@@ -31,6 +31,7 @@
       <logicalFolder name="f1" displayName="dBase" projectFiles="true">
         <itemPath>dbase/dbase_api.c</itemPath>
         <itemPath>dbase/dbase_api_episode.c</itemPath>
+        <itemPath>dbase/dbase_api_file.c</itemPath>
         <itemPath>dbase/dbase_api_show.c</itemPath>
         <itemPath>dbase/dbase_lib.c</itemPath>
         <itemPath>dbase/dbase_lib.h</itemPath>
@@ -107,6 +108,8 @@
       </item>
       <item path="dbase/dbase_api_episode.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="dbase/dbase_api_file.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="dbase/dbase_api_show.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbase/dbase_lib.c" ex="false" tool="0" flavor2="0">
@@ -175,6 +178,8 @@
       <item path="dbase/dbase_api.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="dbase/dbase_api_episode.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dbase/dbase_api_file.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbase/dbase_api_show.c" ex="false" tool="0" flavor2="0">
       </item>

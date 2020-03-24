@@ -102,7 +102,7 @@ add_file(
      * @param   add_rc          Function return code                        */
     int                             add_rc;
     /**
-     *  @param  file_info_p     Pointer to a file information structure     */
+     *  @param  file_info_p     Pointer to a file statistics structure  */
     struct  file_info_t         *   file_info_p;
     /**
      *  @param  input_file_name Buffer to hold the directory/file name      */
@@ -113,6 +113,18 @@ add_file(
     /**
      *  @param  episode_id_p    Pointer to an episode structure             */
     struct  episode_id_t        *   episode_id_p;
+    /**
+     *  @param  fingerprint     The audio fingerprint for the current file  */
+    unsigned char                   fingerprint[ SHA1_DIGEST_SIZE + 2 ];
+    /**
+     *  @param  show            Contains SHOW table information             */
+    struct  show_t                  show;
+    /**
+     *  @param  episode         Contains EPISODE table information          */
+    struct  episode_t               episode;
+    /**
+     *  @param  file_t          Contains FILE table information             */
+    struct  file_t                  file;
 
     /************************************************************************
      *  Function Initialization
@@ -121,11 +133,7 @@ add_file(
     //  Initialize the return code
     add_rc = true;
 
-    /************************************************************************
-     *  Delete everything from the existing dBase
-     ************************************************************************/
-
-    //  Remove all existing data then rebuild the tables without any data.
+    //  Establish a connection to the dBase.
     dbase_open( DBASE_OF_ACCESS );
 
     /************************************************************************
@@ -171,12 +179,6 @@ add_file(
 //  @DEBUG
 #if 0
 {
-    struct  show_t  show;
-    struct  episode_t   episode;
-
-    //  Initialize
-    memset( &show, 0x00, sizeof( struct show_t ) );
-    memset( &episode, 0x00, sizeof( struct episode_t ) );
 
     strncpy( show.name, episode_id_p->show_title, sizeof( show.name ) );
 
@@ -229,16 +231,88 @@ add_file(
 #endif
 
             //  Process the MP3 file
-            mp3_process_file( input_file_name, file_info_p );
+            mp3_process_file( input_file_name, &fingerprint[ 0 ] );
         }
     }
 
-    //  Close the database
-    dbase_close( );
+    /************************************************************************
+     *  Add the file to the file table
+     ************************************************************************/
+
+    //  Initialize
+    memset( &show,      0x00, sizeof( struct show_t ) );
+    memset( &episode,   0x00, sizeof( struct episode_t ) );
+    memset( &file,      0x00, sizeof( struct file_t ) );
+
+    //  Copy the SHOW title to the show query structure
+    strncpy( show.name, episode_id_p->show_title, sizeof( show.name ) );
+
+    //  Did we locate the show in the dBase ?
+    if ( dbase_get_show( &show ) != true )
+    {
+        //  NO:     @ToDo   2   What to do when the SHOW isn't found.
+        log_write( MID_FATAL, "add_file",
+                "SHOW: '%s' is not in the dBase.\n", show.name );
+    }
+    else
+    {
+        //  Load all the EPISODE query parameters
+        episode.show_id = show.show_id;
+        strncpy( episode.name, episode_id_p->episode_title, sizeof( episode.name ) );
+        strncpy( episode.date, episode_id_p->episode_date, sizeof( episode.date ) );
+        strncpy( episode.number, episode_id_p->episode_num, sizeof( episode.number ) );
+
+        //  Is this episode in the dBase
+        if ( dbase_get_episode( &episode ) != true )
+        {
+            //  NO:     @ToDo   2   What to do when the EPISODE isn't found.
+            log_write( MID_FATAL, "add_file",
+                    "EPISODE: %8s - EP:%s - '%s' is not in the dBase.\n",
+                        episode.date, episode.number, episode.name );
+        }
+        else
+        {
+            //  YES:    Add the new file
+            snprintf( file.fingerprint, sizeof( file.fingerprint ),
+                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X"
+                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                      fingerprint[  0 ], fingerprint[  1 ], fingerprint[  2 ],
+                      fingerprint[  3 ], fingerprint[  4 ], fingerprint[  5 ],
+                      fingerprint[  6 ], fingerprint[  7 ], fingerprint[  8 ],
+                      fingerprint[  9 ], fingerprint[ 10 ], fingerprint[ 11 ],
+                      fingerprint[ 12 ], fingerprint[ 13 ], fingerprint[ 14 ],
+                      fingerprint[ 15 ], fingerprint[ 16 ], fingerprint[ 17 ],
+                      fingerprint[ 18 ], fingerprint[ 19 ],  0x00 );
+            file.network_id = -1;
+            file.station_id = -1;
+            file.episode_id = episode.show_id;
+            strncpy( file.date_time, file_info_p->date_time, sizeof( file.date_time ) );
+            file.quality    = -1;
+            strncpy( file.location, file_info_p->dir_name, sizeof( file.location ) );
+
+
+            //  Is this fingerprint already in the dBase ?
+            if ( dbase_get_file( &file ) == true )
+            {
+                //  NO:     @ToDo   2   What to do when the FILE is found.
+                log_write( MID_FATAL, "add_file",
+                        "File: %8s - EP:%s - '%s' is already in the dBase.\n",
+                            episode.date, episode.number, episode.name );
+            }
+            else
+            {
+                //  NO:     Add this file to the dBase
+                dbase_put_file( &file );
+            }
+        }
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
+
+    //  Close the database
+    dbase_close( );
 
     //  DONE!
     return( add_rc );

@@ -179,7 +179,7 @@ DBASE__open(
      *  Create the tools directory if it doesn't already exist
      ************************************************************************/
 
-    //  @ToDo:  Some code is needed here
+    //  @ToDo:  3   Some code is needed here
 
 
     /************************************************************************
@@ -373,7 +373,6 @@ DBASE__open(
                       "station_id       INTEGER,"
                       "episode_id       INTEGER,"
                       "date             TEXT,"
-                      "time             TEXT,"
                       "quality          INTEGER,"
                       "location         TEXT"
                   ");" );

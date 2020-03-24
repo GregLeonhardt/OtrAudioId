@@ -79,7 +79,7 @@ mp3_init(
 int
 mp3_process_file(
     char                        *   file_name_p,
-    struct  file_info_t         *   file_info_p
+    uint8_t                     *   fingerprint_p
     );
 //---------------------------------------------------------------------------
 

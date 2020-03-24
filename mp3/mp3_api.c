@@ -92,7 +92,7 @@
  *  Initialize mp3 operations
  *
  *  @param  file_name_p             Pointer to the file name.
- *  @param  file_info_p             Pointer to a file information structure
+ *  @param  fingerprint_p           Pointer to a buffer to store the fingerprint
  *
  *  @return mp3_rc                  TRUE = Success
  *                                  FALSE = Failure
@@ -104,7 +104,7 @@
 int
 mp3_process_file(
     char                        *   file_name_p,
-    struct  file_info_t         *   file_info_p
+    uint8_t                     *   fingerprint_p
     )
 {
     /**
@@ -221,7 +221,10 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
                     //  Did we find one ?
                     if ( frame_l != 0 )
                     {
-                        //  YES:    Remove the cram between frames
+                        //  YES:    Update the audio checksum
+                        sha1_update( &sha1_context, MP3__rdb_beg_p, frame_l );
+
+                        //  Remove the frame data from the buffer
                         MP3__remove_frame( frame_l );
                     }
                     else
@@ -239,7 +242,7 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
 
             case    MP3_STATE_APETAGEX:
             {
-                //  @ToDo   NOTE:
+                //  @ToDo   3   NOTE:
                 //          This is a hack.  A function library needs to be
                 //          created to process this frame.
 
@@ -269,7 +272,10 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
                    //  Did we find a frame ?
                     if ( frame_l != 0 )
                     {
-                        //  YES:    Remove the frame from the buffer
+                        //  YES:    Update the audio checksum
+                        sha1_update( &sha1_context, MP3__rdb_beg_p, frame_l );
+
+                        //  Remove the frame data from the buffer
                         MP3__remove_frame( frame_l );
                     }
                 }
@@ -319,6 +325,13 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
             }   break;
         }
     }
+
+    /************************************************************************
+     *  Save the audio fingerprint
+     ************************************************************************/
+
+    //  Finalize the SHA1 operation
+    sha1_final( &sha1_context, (char*)fingerprint_p );
 
     /************************************************************************
      *  Function Exit

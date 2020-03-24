@@ -58,8 +58,7 @@
 #define DB_NETWORK_NAME_L       (   32 )
 #define DB_STATION_NAME_L       (   32 )
 #define DB_TITLE_L              (   60 )
-#define DB_DATE_L               (   10 )
-#define DB_TIME_L               (   10 )
+#define DB_DATE_TIME_L          (   32 )
 #define DB_NUMBER_L             (    6 )
 #define DB_FINGERPRINT_L        (   80 )
 #define DB_LOCATION_L           (  256 )
@@ -153,7 +152,7 @@ struct   episode_t
     char                            name[           DB_TITLE_L          +1  ];
     /**
      *  @param  date                Broadcast date of this episode          */
-    char                            date[           DB_DATE_L           +1  ];
+    char                            date[           DB_DATE_TIME_L      +1  ];
     /**
      *  @param  number              Show episode number                     */
     char                            number[         DB_NUMBER_L         +1  ];
@@ -179,17 +178,14 @@ struct   file_t
      *  @param  episode_id          Episode identifier                      */
     int                             episode_id;
     /**
-     *  @param  date                Date this file was created              */
-    char                            date[           DB_DATE_L           +1  ];
-    /**
-     *  @param  time                Time this file was created              */
-    char                            time[           DB_TIME_L           +1  ];
+     *  @param  date_time           Creation Date & Time                    */
+    char                            date_time[      DB_DATE_TIME_L      +1  ];
     /**
      *  @param  quality             Quality of this recording               */
     int                             quality;    
     /**
      *  @param  location            Where this file is located              */
-    char                            number[         DB_LOCATION_L       +1  ];
+    char                            location[       DB_LOCATION_L       +1  ];
 };
 //----------------------------------------------------------------------------
 
@@ -242,6 +238,26 @@ dbase_delete_episode_list(
 int
 dbase_put_episode(
     struct  episode_t           *   episode_p
+    );
+//---------------------------------------------------------------------------
+int
+dbase_get_file(
+    struct  file_t              *   file_p
+    );
+//---------------------------------------------------------------------------
+struct  list_base_t *
+dbase_get_file_list(
+    struct  file_t              *   file_p
+    );
+//---------------------------------------------------------------------------
+void
+dbase_delete_file_list(
+    struct  list_base_t         *   file_list_p
+    );
+//---------------------------------------------------------------------------
+int
+dbase_put_file(
+    struct  file_t              *   file_p
     );
 //---------------------------------------------------------------------------
 

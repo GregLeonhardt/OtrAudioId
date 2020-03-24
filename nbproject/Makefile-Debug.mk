@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/create/create_lib.o \
 	${OBJECTDIR}/dbase/dbase_api.o \
 	${OBJECTDIR}/dbase/dbase_api_episode.o \
+	${OBJECTDIR}/dbase/dbase_api_file.o \
 	${OBJECTDIR}/dbase/dbase_api_show.o \
 	${OBJECTDIR}/dbase/dbase_lib.o \
 	${OBJECTDIR}/id3/id3_api.o \
@@ -105,6 +106,11 @@ ${OBJECTDIR}/dbase/dbase_api_episode.o: dbase/dbase_api_episode.c
 	${MKDIR} -p ${OBJECTDIR}/dbase
 	${RM} "$@.d"
 	$(COMPILE.c) -g -I../LibTools/include -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_api_episode.o dbase/dbase_api_episode.c
+
+${OBJECTDIR}/dbase/dbase_api_file.o: dbase/dbase_api_file.c
+	${MKDIR} -p ${OBJECTDIR}/dbase
+	${RM} "$@.d"
+	$(COMPILE.c) -g -I../LibTools/include -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_api_file.o dbase/dbase_api_file.c
 
 ${OBJECTDIR}/dbase/dbase_api_show.o: dbase/dbase_api_show.c
 	${MKDIR} -p ${OBJECTDIR}/dbase
