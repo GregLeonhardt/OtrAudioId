@@ -122,7 +122,7 @@ mp3_process_file(
      ************************************************************************/
 
     //  Initialize the return code
-    mp3_rc = true;
+    mp3_rc = 0;
 
     //  Initialize SHA1
     sha1_init( &sha1_context );
@@ -209,7 +209,13 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
                 //  Were we at the beginning of a frame ?
                 if ( frame_l != 0 )
                 {
-                    //  YES:    Remove the frame from the buffer
+                    //  YES:    Update the audio checksum
+                    sha1_update( &sha1_context, MP3__rdb_beg_p, frame_l );
+
+                    //  Add the length of this frame to the total length
+                    mp3_rc += frame_l;
+
+                    //  Remove the frame data from the buffer
                     MP3__remove_frame( frame_l );
                 }
                 else
@@ -223,6 +229,9 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
                     {
                         //  YES:    Update the audio checksum
                         sha1_update( &sha1_context, MP3__rdb_beg_p, frame_l );
+
+                        //  Add the length of this frame to the total length
+                        mp3_rc += frame_l;
 
                         //  Remove the frame data from the buffer
                         MP3__remove_frame( frame_l );
@@ -242,7 +251,7 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
 
             case    MP3_STATE_APETAGEX:
             {
-                //  @ToDo   3   NOTE:
+                //  @ToDo   0012    Write a function to process ‘APETAGEX’.
                 //          This is a hack.  A function library needs to be
                 //          created to process this frame.
 
@@ -274,6 +283,9 @@ log_write( MID_INFO, "mp3_process_file", "COMM: %s\n", id3_get_v2_tag( "COMM" ) 
                     {
                         //  YES:    Update the audio checksum
                         sha1_update( &sha1_context, MP3__rdb_beg_p, frame_l );
+
+                        //  Add the length of this frame to the total length
+                        mp3_rc += frame_l;
 
                         //  Remove the frame data from the buffer
                         MP3__remove_frame( frame_l );

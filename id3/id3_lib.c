@@ -371,7 +371,7 @@ ID3__id3v1p(
      *  ID3 version 1
      ************************************************************************/
 
-    //  @ToDo   3   Write function 'ID3__id3v1( )'
+    //  @ToDo   0011   Write function 'ID3__id3v1( )'
 
     log_write( MID_FATAL, "ID3__id3v1p",
                "ID3v1+ header detected. Shutting down...\n" );

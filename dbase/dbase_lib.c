@@ -179,7 +179,7 @@ DBASE__open(
      *  Create the tools directory if it doesn't already exist
      ************************************************************************/
 
-    //  @ToDo:  3   Some code is needed here
+    //  @ToDo:  0010   When the '.LibTools' directory does not exist.
 
 
     /************************************************************************

@@ -115,7 +115,7 @@ add_file(
     struct  episode_id_t        *   episode_id_p;
     /**
      *  @param  fingerprint     The audio fingerprint for the current file  */
-    unsigned char                   fingerprint[ SHA1_DIGEST_SIZE + 2 ];
+    unsigned char                   fingerprint[ SHA1_DIGEST_SIZE + sizeof( int ) ];
     /**
      *  @param  show            Contains SHOW table information             */
     struct  show_t                  show;
@@ -231,7 +231,7 @@ add_file(
 #endif
 
             //  Process the MP3 file
-            mp3_process_file( input_file_name, &fingerprint[ 0 ] );
+            add_rc = mp3_process_file( input_file_name, &fingerprint[ 0 ] );
         }
     }
 
@@ -250,7 +250,7 @@ add_file(
     //  Did we locate the show in the dBase ?
     if ( dbase_get_show( &show ) != true )
     {
-        //  NO:     @ToDo   2   What to do when the SHOW isn't found.
+        //  NO:     @ToDo   0006   What to do when the ShowTitle isn't found.
         log_write( MID_FATAL, "add_file",
                 "SHOW: '%s' is not in the dBase.\n", show.name );
     }
@@ -265,7 +265,7 @@ add_file(
         //  Is this episode in the dBase
         if ( dbase_get_episode( &episode ) != true )
         {
-            //  NO:     @ToDo   2   What to do when the EPISODE isn't found.
+            //  NO:     @ToDo   0007   What to do when an Episode* isn't found.
             log_write( MID_FATAL, "add_file",
                     "EPISODE: %8s - EP:%s - '%s' is not in the dBase.\n",
                         episode.date, episode.number, episode.name );
@@ -274,15 +274,17 @@ add_file(
         {
             //  YES:    Add the new file
             snprintf( file.fingerprint, sizeof( file.fingerprint ),
-                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X"
-                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X"
+                      "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
                       fingerprint[  0 ], fingerprint[  1 ], fingerprint[  2 ],
                       fingerprint[  3 ], fingerprint[  4 ], fingerprint[  5 ],
                       fingerprint[  6 ], fingerprint[  7 ], fingerprint[  8 ],
                       fingerprint[  9 ], fingerprint[ 10 ], fingerprint[ 11 ],
                       fingerprint[ 12 ], fingerprint[ 13 ], fingerprint[ 14 ],
                       fingerprint[ 15 ], fingerprint[ 16 ], fingerprint[ 17 ],
-                      fingerprint[ 18 ], fingerprint[ 19 ],  0x00 );
+                      fingerprint[ 18 ], fingerprint[ 19 ],
+                      ( add_rc & 0xFF000000 ) >> 24, ( add_rc & 0x00FF0000 ) >> 16,
+                      ( add_rc & 0x0000FF00 ) >>  8, ( add_rc & 0x000000FF ) );
             file.network_id = -1;
             file.station_id = -1;
             file.episode_id = episode.episode_id;
@@ -294,7 +296,7 @@ add_file(
             //  Is this fingerprint already in the dBase ?
             if ( dbase_get_file( &file ) == true )
             {
-                //  NO:     @ToDo   2   What to do when the FILE is found.
+                //  NO:     @ToDo   0008   What to do when FileFingerprint already exists.
                 log_write( MID_FATAL, "add_file",
                         "File: %8s - EP:%s - '%s' is already in the dBase.\n",
                             episode.date, episode.number, episode.name );
@@ -305,7 +307,7 @@ add_file(
                 add_rc = dbase_put_file( &file );
                 if ( add_rc != true )
                 {
-                    //  NO:     @ToDo   2   What to do when the FILE put fails.
+                    //  NO:     @ToDo   0009   What to do when the File* put fails.
                     log_write( MID_FATAL, "add_file",
                             "dbase_put_file failed with RD = %d\n", add_rc );
                 }
