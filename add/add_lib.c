@@ -177,8 +177,9 @@ ADD__get_id_from_filename(
     if( segment_o == 0 )
     {
         //  No file extension
+        log_write( MID_WARNING, "ADD__get_id_f...", "'%s'\n", filename_p );
         log_write( MID_WARNING, "ADD__get_id_f...",
-                      "Improper fileneme format.  The format must be:\n" );
+                      "Improper EpisodeTitle.  The format must be:\n" );
         log_write( MID_FATAL, "ADD__get_id_f...",
                       "Show Title - Episode Number - Episode Air Date - Episode Title\n" );
     }
@@ -264,8 +265,9 @@ ADD__get_id_from_filename(
     if( segment_o == 0 )
     {
         //  No file extension
+        log_write( MID_WARNING, "ADD__get_id_f...", "'%s'\n", filename_p );
         log_write( MID_WARNING, "ADD__get_id_f...",
-                      "Improper fileneme format.  The format must be:\n" );
+                      "Improper EpisodeNumber.  The format must be:\n" );
         log_write( MID_FATAL, "ADD__get_id_f...",
                       "Show Title - Episode Number - Episode Air Date - Episode Title\n" );
     }
@@ -314,8 +316,9 @@ ADD__get_id_from_filename(
     if( segment_o == 0 )
     {
         //  No file extension
+        log_write( MID_WARNING, "ADD__get_id_f...", "'%s'\n", filename_p );
         log_write( MID_WARNING, "ADD__get_id_f...",
-                      "Improper filename format.  The format must be:\n" );
+                      "Improper EpisodeDate.  The format must be:\n" );
         log_write( MID_FATAL, "ADD__get_id_f...",
                       "Show Title - Episode Number - Episode Air Date - Episode Title\n" );
     }
