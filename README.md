@@ -1,6 +1,6 @@
 This project is the first step toward replacing the [apears to be] unsupported OTTER program.  The primary goals are:
 
-1) Importing show/episode data from OTTER into a SqLite database.
+1) Import show/episode data from OTTER into a SqLite database.
 
 2) Scan OTR files creating a unique fingerprint that is independant of any ID3 tags and add the fingerprint into the SqLite database linking it to a show/episode.
 
