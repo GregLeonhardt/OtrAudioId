@@ -137,6 +137,12 @@ DBASE__put_episode(
     );
 //---------------------------------------------------------------------------
 int
+DBASE__update_episode(
+    struct  episode_t           *   episode_set_p,
+    struct  episode_t           *   episode_where_p
+    );
+//---------------------------------------------------------------------------
+int
 DBASE__get_file(
     struct  file_t              *   file_p
     );

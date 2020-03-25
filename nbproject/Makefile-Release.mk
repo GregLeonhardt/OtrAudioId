@@ -44,6 +44,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/dbase/dbase_api_file.o \
 	${OBJECTDIR}/dbase/dbase_api_show.o \
 	${OBJECTDIR}/dbase/dbase_lib.o \
+	${OBJECTDIR}/dbase/dbase_lib_episode.o \
+	${OBJECTDIR}/dbase/dbase_lib_file.o \
+	${OBJECTDIR}/dbase/dbase_lib_show.o \
 	${OBJECTDIR}/id3/id3_api.o \
 	${OBJECTDIR}/id3/id3_lib.o \
 	${OBJECTDIR}/main.o \
@@ -119,6 +122,21 @@ ${OBJECTDIR}/dbase/dbase_lib.o: dbase/dbase_lib.c
 	${MKDIR} -p ${OBJECTDIR}/dbase
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_lib.o dbase/dbase_lib.c
+
+${OBJECTDIR}/dbase/dbase_lib_episode.o: dbase/dbase_lib_episode.c
+	${MKDIR} -p ${OBJECTDIR}/dbase
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_lib_episode.o dbase/dbase_lib_episode.c
+
+${OBJECTDIR}/dbase/dbase_lib_file.o: dbase/dbase_lib_file.c
+	${MKDIR} -p ${OBJECTDIR}/dbase
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_lib_file.o dbase/dbase_lib_file.c
+
+${OBJECTDIR}/dbase/dbase_lib_show.o: dbase/dbase_lib_show.c
+	${MKDIR} -p ${OBJECTDIR}/dbase
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/dbase_lib_show.o dbase/dbase_lib_show.c
 
 ${OBJECTDIR}/id3/id3_api.o: id3/id3_api.c
 	${MKDIR} -p ${OBJECTDIR}/id3

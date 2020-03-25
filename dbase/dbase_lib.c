@@ -116,7 +116,7 @@ DBASE__callback(
 
     for( ndx = 0; ndx < argc; ndx ++ )
     {
-        log_write( MID_WARNING, "STORE__Callback",
+        log_write( MID_WARNING, "DBASE__callback",
                    "%s = %s\n",
                    azColName[ ndx ], argv[ ndx ] ? argv[ ndx ] : "NULL");
     }

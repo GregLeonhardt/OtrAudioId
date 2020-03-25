@@ -32,6 +32,7 @@
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
 #include <string.h>             //  Functions for managing strings
+#include <strings.h>            //  BSD Functions for managing strings
 #include <unistd.h>             //  UNIX standard library.
                                 //*******************************************
 
@@ -102,25 +103,74 @@ dbase_get_episode(
     /**
      *  @param  sqlite_rc       Return code from a SqLite function call     */
     int                             sqlite_rc;
+    /**
+     *  @param  copy_of_episode A local copy of the episode structure       */
+    struct  episode_t               episode;
+    /**
+     *  @param  answer          Where the keyboard read data goes           */
+    char                            answer[ 256 ];
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
+    //  Save the episode structure
+    memcpy( &episode, episode_p, sizeof( episode ) );
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
     //  Get an episode record
-    sqlite_rc = DBASE__get_episode( episode_p );
+    sqlite_rc = DBASE__get_episode( &episode );
+
+    //  Was the episode record found ?
+    if ( sqlite_rc != true )
+    {
+        //  NO:     Restore the episode structure to it original
+        memcpy( &episode, episode_p, sizeof( episode ) );
+
+        //  Remove EpisodeDate and EpisodeNumber from the search
+        memset( episode.date,   '\0', sizeof( episode.date ) );
+        memset( episode.number, '\0', sizeof( episode.number ) );
+
+        //  Get an episode record
+        sqlite_rc = DBASE__get_episode( &episode );
+
+        //  Did we find the episode ?
+        if ( sqlite_rc == true )
+        {
+            //  YES:    Ask a human if this is correct
+            log_write( MID_INFO, "dbase_get_episode",
+                    "Found Episode:        %4d - %8s - %s\n",
+                    episode.number, episode.date, episode.name );
+            log_write( MID_INFO, "dbase_get_episode",
+                    "Looking for Episode:  %4d - %8s - %s\n",
+                    episode_p->number, episode_p->date, episode_p->name );
+            log_write( MID_INFO, "dbase_get_episode",
+                    "Is this correct ? (Yes | No)");
+            fgets( answer, sizeof( answer ), stdin );
+
+            //  Yes ?
+            if ( strncasecmp( answer, "YES", 3 ) != 0 )
+            {
+                //  NO:     Something other then "YES" was typed.
+                sqlite_rc = SQLITE_ERROR;
+            }
+            else
+            {
+                //  Update the Episode record with the changes
+                sqlite_rc = DBASE__update_episode( episode_p, &episode );
+            }
+        }
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
     //  DONE!
-    return( sqlite_rc == SQLITE_OK ? true : false );
+    return( sqlite_rc );
 }
 
 /****************************************************************************/
@@ -244,7 +294,7 @@ dbase_put_episode(
      ************************************************************************/
 
     //  DONE!
-    return( sqlite_rc == SQLITE_OK ? true : false );
+    return( sqlite_rc );
 }
 
 /****************************************************************************/

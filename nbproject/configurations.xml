@@ -35,6 +35,9 @@
         <itemPath>dbase/dbase_api_show.c</itemPath>
         <itemPath>dbase/dbase_lib.c</itemPath>
         <itemPath>dbase/dbase_lib.h</itemPath>
+        <itemPath>dbase/dbase_lib_episode.c</itemPath>
+        <itemPath>dbase/dbase_lib_file.c</itemPath>
+        <itemPath>dbase/dbase_lib_show.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="id3" projectFiles="true">
         <itemPath>id3/id3_api.c</itemPath>
@@ -116,6 +119,12 @@
       </item>
       <item path="dbase/dbase_lib.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="dbase/dbase_lib_episode.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dbase/dbase_lib_file.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dbase/dbase_lib_show.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="id3/id3_api.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="id3/id3_api.h" ex="false" tool="3" flavor2="0">
@@ -186,6 +195,12 @@
       <item path="dbase/dbase_lib.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbase/dbase_lib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dbase/dbase_lib_episode.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dbase/dbase_lib_file.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dbase/dbase_lib_show.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="id3/id3_api.c" ex="false" tool="0" flavor2="0">
       </item>

@@ -241,7 +241,7 @@ DBASE__get_episode(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "dbase_get_episode",
+    log_write( MID_INFO, "DBASE__get_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -469,7 +469,7 @@ DBASE__get_episode_list(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "dbase_get_episode",
+    log_write( MID_INFO, "DBASE__get_episode_list",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -637,7 +637,7 @@ DBASE__put_episode(
                     episode_p->available );
 
     //  Log the database access
-    log_write( MID_INFO, "dbase_put_episode",
+    log_write( MID_INFO, "DBASE__put_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd_p );
 
     //  Execute the record insertion
@@ -647,7 +647,296 @@ DBASE__put_episode(
     if( sqlite_rc != SQLITE_OK )
     {
         //  NO:     Log the failure
-        log_write( MID_WARNING, "dbase_put_episode",
+        log_write( MID_WARNING, "DBASE__put_episode",
+                   "SQL error: %s\n", sqlite_error_p);
+
+        //  Release the error message
+        sqlite3_free( sqlite_error_p );
+    }
+
+    //  Release the data buffer
+    sqlite3_free( sqlite_cmd_p );
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( sqlite_rc == SQLITE_OK ? true : false );
+}
+
+/****************************************************************************/
+/**
+ *  Access the database to update an existing episode.
+ *
+ *  @param  episode_set_p           Update information
+ *  @param  episode_p               Query information
+ *
+ *  @return dbase_rc                TRUE  = Record was     found.
+ *                                  FALSE = Record was not found.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DBASE__update_episode(
+    struct  episode_t           *   episode_set_p,
+    struct  episode_t           *   episode_where_p
+    )
+{
+    /**
+     *  @param  sqlite_rc       Return code from a SqLite function call     */
+    int                             sqlite_rc;
+    /**
+     *  @param  sqlite_cmd_p    Pointer to a command buffer                 */
+    char                        *   sqlite_cmd_p;
+    /**
+     *  @param  sqlite_error_p  Pointer to an error message (if failed)     */
+    char                        *   sqlite_error_p;
+    /**
+     *  @param  sqlite_cmd      Full SqLite command                         */
+    char                            sqlite_cmd[ SQLITE_CMD_L ];
+    /**
+     *  @param  first_s         First SET string added to the command       */
+    int                             first_s;
+    /**
+     *  @param  first_w         First WHERE string added to the command     */
+    int                             first_w;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Clear the command buffers
+    memset( sqlite_cmd, '\0', sizeof( sqlite_cmd ) );
+
+    //  No search strings have been added yet.
+    first_s = true;
+    first_w = true;
+
+    //  Start building the command
+    strncpy( sqlite_cmd, "update EPISODE set ", sizeof( sqlite_cmd ) );
+
+    /************************************************************************
+     *  SHOW-ID                 SET
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( episode_set_p->show_id != -1 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_s == true )
+            //  YES:    Build the show_id search string.
+            sqlite_cmd_p = sqlite3_mprintf( "show_id = '%d'", episode_set_p->show_id );
+        else
+            //  NO:     Build the show_id search string.
+            sqlite_cmd_p = sqlite3_mprintf( ", show_id = '%d'", episode_set_p->show_id );
+
+        //  Not the first search string anymore.
+        first_s = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-TITLE           SET
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_set_p->name ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_s == true )
+            //  YES:    Build the name search string.
+            sqlite_cmd_p = sqlite3_mprintf( "name = '%q'", episode_set_p->name );
+        else
+            //  NO:     Build the name search string.
+            sqlite_cmd_p = sqlite3_mprintf( ", name = '%q'", episode_set_p->name );
+
+        //  Not the first search string anymore.
+        first_s = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-DATE            SET
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_set_p->date ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_s == true )
+            //  YES:    Build the date search string.
+            sqlite_cmd_p = sqlite3_mprintf( "date = '%q'", episode_set_p->date );
+        else
+            //  NO:     Build the date search string.
+            sqlite_cmd_p = sqlite3_mprintf( ", date = '%q'", episode_set_p->date );
+
+        //  Not the first search string anymore.
+        first_s = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-NUMBER          SET
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_set_p->date ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_s == true )
+            //  YES:    Build the number search string.
+            sqlite_cmd_p = sqlite3_mprintf( "number = '%q'", episode_set_p->number );
+        else
+            //  NO:     Build the number search string.
+            sqlite_cmd_p = sqlite3_mprintf( ", number = '%q'", episode_set_p->number );
+
+        //  Not the first search string anymore.
+        first_s = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  SHOW-ID                 WHERE
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( episode_where_p->show_id != -1 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_w == true )
+            //  YES:    Build the show_id search string.
+            sqlite_cmd_p = sqlite3_mprintf( " WHERE show_id = '%d' ", episode_where_p->show_id );
+        else
+            //  NO:     Build the show_id search string.
+            sqlite_cmd_p = sqlite3_mprintf( "AND show_id = '%d' ", episode_where_p->show_id );
+
+        //  Not the first search string anymore.
+        first_w = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-TITLE           WHERE
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_where_p->name ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_w == true )
+            //  YES:    Build the name search string.
+            sqlite_cmd_p = sqlite3_mprintf( " WHERE name = '%q' ", episode_where_p->name );
+        else
+            //  NO:     Build the name search string.
+            sqlite_cmd_p = sqlite3_mprintf( "AND name = '%q' ", episode_where_p->name );
+
+        //  Not the first search string anymore.
+        first_w = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-DATE            WHERE
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_where_p->date ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_w == true )
+            //  YES:    Build the date search string.
+            sqlite_cmd_p = sqlite3_mprintf( " WHERE date = '%q' ", episode_where_p->date );
+        else
+            //  NO:     Build the date search string.
+            sqlite_cmd_p = sqlite3_mprintf( "AND date = '%q' ", episode_where_p->date );
+
+        //  Not the first search string anymore.
+        first_w = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  EPISODE-NUMBER          WHERE
+     ************************************************************************/
+
+    //  Is there an episode title to search for ?
+    if ( strlen( episode_where_p->date ) != 0 )
+    {
+        //  YES:    Is this the first search string ?
+        if ( first_w == true )
+            //  YES:    Build the number search string.
+            sqlite_cmd_p = sqlite3_mprintf( " WHERE number = '%q' ", episode_where_p->number );
+        else
+            //  NO:     Build the number search string.
+            sqlite_cmd_p = sqlite3_mprintf( "AND number = '%q' ", episode_where_p->number );
+
+        //  Not the first search string anymore.
+        first_w = false;
+
+        //  Append the new part of the command to the complete command
+        strncat( sqlite_cmd, sqlite_cmd_p, ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+        //  Release the data buffer
+        sqlite3_free( sqlite_cmd_p );
+    }
+
+    /************************************************************************
+     *  Update the record
+     ************************************************************************/
+
+    //  Append the command termination string to the complete command.
+    strncat( sqlite_cmd, ";", ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
+
+    //  Log the database access
+    log_write( MID_INFO, "DBASE__update_episode",
+            "SqLiteCmd: '%s'\n", sqlite_cmd );
+
+    //  Execute the record insertion
+    sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_error_p);
+
+    //  Was the command successful ?
+    if( sqlite_rc != SQLITE_OK )
+    {
+        //  NO:     Log the failure
+        log_write( MID_WARNING, "DBASE__update_episode",
                    "SQL error: %s\n", sqlite_error_p);
 
         //  Release the error message
