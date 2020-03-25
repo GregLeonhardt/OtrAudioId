@@ -280,7 +280,7 @@ command_line(
          && ( in_dir_name_p        == NULL )
          && ( create_dir_name_p    == NULL ) )
     {
-#if 1
+#if 0
         in_dir_name_p        = "/home/greg/Music";
         in_line_parm |= CMD_PARM_ID;
         out_dir_name_p       = "/tmp";
@@ -366,7 +366,7 @@ main(
      ************************************************************************/
 
     //  Initialize the log handler
-    log_init( "MP3_Real-ID.log" );
+    log_init( "OTR_Audio_ID.log" );
 
     //  Mark the start of the run in the log file
     log_write( MID_INFO, "main",

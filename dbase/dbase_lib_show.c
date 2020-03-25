@@ -128,7 +128,7 @@ DBASE__get_show(
                     show_p->name );
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__get_show",
+    log_write( MID_LOGONLY, "DBASE__get_show",
             "SqLiteCmd: '%s'\n", sqlite_cmd_p );
 
     //  Perform the query
@@ -222,7 +222,7 @@ DBASE__put_show(
                     show_p->name, show_p->state );
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__put_show",
+    log_write( MID_LOGONLY, "DBASE__put_show",
             "SqLiteCmd: '%s'\n", sqlite_cmd_p );
 
     //  Execute the record insertion

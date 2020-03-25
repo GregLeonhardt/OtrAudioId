@@ -148,7 +148,7 @@ dbase_get_episode(
                     "Looking for Episode:  %4d - %8s - %s\n",
                     episode_p->number, episode_p->date, episode_p->name );
             log_write( MID_INFO, "dbase_get_episode",
-                    "Is this correct ? (Yes | No)");
+                    "Is this correct ? (Yes | No)  ");
             fgets( answer, sizeof( answer ), stdin );
 
             //  Yes ?

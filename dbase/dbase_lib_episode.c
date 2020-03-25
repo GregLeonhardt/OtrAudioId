@@ -241,7 +241,7 @@ DBASE__get_episode(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__get_episode",
+    log_write( MID_LOGONLY, "DBASE__get_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -469,7 +469,7 @@ DBASE__get_episode_list(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__get_episode_list",
+    log_write( MID_LOGONLY, "DBASE__get_episode_list",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -637,7 +637,7 @@ DBASE__put_episode(
                     episode_p->available );
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__put_episode",
+    log_write( MID_LOGONLY, "DBASE__put_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd_p );
 
     //  Execute the record insertion
@@ -926,7 +926,7 @@ DBASE__update_episode(
     strncat( sqlite_cmd, ";", ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__update_episode",
+    log_write( MID_LOGONLY, "DBASE__update_episode",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Execute the record insertion

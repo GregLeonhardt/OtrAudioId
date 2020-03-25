@@ -317,7 +317,7 @@ DBASE__get_file(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__get_file",
+    log_write( MID_LOGONLY, "DBASE__get_file",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -624,7 +624,7 @@ DBASE__get_file_list(
      ************************************************************************/
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__get_file_list",
+    log_write( MID_LOGONLY, "DBASE__get_file_list",
             "SqLiteCmd: '%s'\n", sqlite_cmd );
 
     //  Perform the query
@@ -798,7 +798,7 @@ DBASE__put_file(
                     file_p->location );
 
     //  Log the database access
-    log_write( MID_INFO, "DBASE__put_file",
+    log_write( MID_LOGONLY, "DBASE__put_file",
             "SqLiteCmd: '%s'\n", sqlite_cmd_p );
 
     //  Execute the record insertion

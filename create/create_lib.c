@@ -61,6 +61,7 @@
 #define ED_DATE_O                2
 #define ED_DATE_L                8
 #define ED_EPISODE_NUM_O        11
+#define ED_EPISODE_NUM_E        14
 #define ED_EPISODE_NUM_L         4
 #define ED_EPISODE_NAME_O       16
 //----------------------------------------------------------------------------
@@ -129,6 +130,9 @@ CREATE__process_file(
     /**
      *  @param  episode_p       Episode information                         */
     struct  episode_t               episode;
+    /**
+     *  @param  episode_num_o   Offset to the episode number                */
+    int                             episode_num_o;
 
     /************************************************************************
      *  Function Initialization
@@ -199,8 +203,24 @@ CREATE__process_file(
         //  Now add it to the dBase.
         create_rc = dbase_put_show( &show );
 
+        //  Is this show already in the dBase ?
+        if ( create_rc == false )
+        {
+            //  @ToDo   0014    What to do when dbase_put_show( ) fails.
+            log_write( MID_FATAL, "CREATE__process_file",
+                       "Failed to create a record for this show\n" );
+        }
+
         //  Finally read it back to get the SHOW-ID
         create_rc = dbase_get_show( &show );
+
+        //  Is this show already in the dBase ?
+        if ( create_rc == false )
+        {
+            //  @ToDo   0015    What to do when dbase_get_show( ) fails.
+            log_write( MID_FATAL, "CREATE__process_file",
+                       "Failed to read the show record\n" );
+        }
     }
 
     /************************************************************************
@@ -221,7 +241,8 @@ CREATE__process_file(
         if (    ( read_data_p != END_OF_FILE )
              && ( read_data_p != NULL        ) )
         {
-            log_write( MID_DEBUG_3, "CREATE__process_file", "%s\n", read_data_p );
+            //  Log the new record.
+            log_write( MID_LOGONLY, "CREATE__process_file", "%s\n", read_data_p );
 
             //  Is there an episode number in the input record ?
             if ( isdigit( read_data_p[ ED_EPISODE_NUM_O + ED_EPISODE_NUM_L ] ) != 0 )
@@ -233,24 +254,21 @@ CREATE__process_file(
             //  Clear the episode information structure.
             memset( &episode, 0x00, sizeof( struct episode_t ) );
 
+            /****************************************************************
+             *  EPISODE NUMBER
+             ****************************************************************/
+
             //  Copy the SHOW-ID
             episode.show_id = show.show_id;
 
-            //  Parse the input record for episode information
-            sscanf( read_data_p, "%c %s %s %s",
-                    &exists, episode.date, episode.number, episode.name );
 
-            //  Is there an episode name available in the input data ?
-            if ( strlen( episode.name ) > 0 )
-            {
-                //  YES:    Now let's get the episode name (title)
-                strncpy( episode.name,
-                        &read_data_p[ ED_EPISODE_NAME_O ],
-                         sizeof( episode.name ) );
-            }
+            /****************************************************************
+             *  EPISODE EXISTS
+             ****************************************************************/
 
             //  Does this episode exist ?
-            if ( exists == '*' )
+            if (    ( strlen( read_data_p ) >= ED_EXISTS_O )
+                 && ( read_data_p[ ED_EXISTS_O ] == '*' ) )
             {
                 //  YES:    Mark it as existing
                 episode.available = DB_SA_EXISTS;
@@ -261,8 +279,70 @@ CREATE__process_file(
                 episode.available = 0;
             }
 
+            /****************************************************************
+             *  EPISODE DATE
+             ****************************************************************/
+
+            //  Is there a date ?
+            if (    ( strlen( read_data_p ) >= ED_DATE_O )
+                 && ( isalnum( read_data_p[ ED_DATE_O ] ) != 0 ) )
+            {
+                //  YES:    Copy the information
+                strncpy( episode.date,
+                        &read_data_p[ ED_DATE_O ],
+                         ED_DATE_L );
+            }
+
+
+            /****************************************************************
+             *  EPISODE NUMBER
+             ****************************************************************/
+
+            //  @NOTE:  Extra processing here because the EpisodeNumber is
+            //          right justified.
+
+            //  Is there an episode number ?
+            if (    ( strlen( read_data_p ) >= ED_EPISODE_NUM_E )
+                 && ( isdigit( read_data_p[ ED_EPISODE_NUM_E ] ) != 0 ) )
+            {
+                //  YES:    Find the start of the episode number
+                for ( episode_num_o = ED_EPISODE_NUM_O;
+                      read_data_p[ episode_num_o ] == ' ';
+                      episode_num_o += 1 );
+
+                //  Subtract the starting offset to get the actual offset
+                episode_num_o -= ED_EPISODE_NUM_O;
+
+                //  Copy the information
+                strncpy( episode.number,
+                        &read_data_p[ ED_EPISODE_NUM_O + episode_num_o ],
+                        ( ED_EPISODE_NUM_L - episode_num_o ) );
+            }
+
+            /****************************************************************
+             *  EPISODE TITLE
+             ****************************************************************/
+
+            //  Is there an episode title ?
+            if (    ( strlen( read_data_p ) >= ED_EPISODE_NAME_O )
+                 && ( isprint( read_data_p[ ED_EPISODE_NAME_O ] ) != 0 ) )
+            {
+                //  YES:    Copy the information
+                strncpy( episode.name,
+                        &read_data_p[ ED_EPISODE_NAME_O ],
+                         sizeof( episode.name ) );
+            }
+
             //  We finally get to add the episode to the dBase
             create_rc = dbase_put_episode( &episode );
+
+            //  Is this show already in the dBase ?
+            if ( create_rc == false )
+            {
+                //  @ToDo   0016    What to do when dbase_put_episode( ) fails.
+                log_write( MID_FATAL, "CREATE__process_file",
+                           "Failed to create a record for this episode\n" );
+            }
         }
 
     }   while( read_data_p != END_OF_FILE );
@@ -271,6 +351,8 @@ CREATE__process_file(
      *  Function Body
      ************************************************************************/
 
+    //  Close the input file
+    file_close( in_file_fp );
 
 
     /************************************************************************

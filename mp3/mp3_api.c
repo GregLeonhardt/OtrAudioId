@@ -130,6 +130,8 @@ mp3_process_file(
     //  Initialize the decode state
     state = MP3_STATE_ID3V2;
 
+    //  @ToDo   0017    File-Open-Read( )
+
     /************************************************************************
      *  Process the entire file
      ************************************************************************/

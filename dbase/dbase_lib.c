@@ -213,7 +213,7 @@ DBASE__open(
     else
     {
         //  YES:    Log the event
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                    "Database: 'otr.db' was successfully opened\n" );
     }
 #endif
@@ -235,7 +235,7 @@ DBASE__open(
                   ");" );
 
         //  Log the database access
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                 "SqLiteCmd: '%s'\n", sqlite_cmd );
 
         //  Execute SQL statement
@@ -268,7 +268,7 @@ DBASE__open(
                   ");" );
 
         //  Log the database access
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                 "SqLiteCmd: '%s'\n", sqlite_cmd );
 
         //  Execute SQL statement
@@ -302,7 +302,7 @@ DBASE__open(
                   ");" );
 
         //  Log the database access
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                 "SqLiteCmd: '%s'\n", sqlite_cmd );
 
         //  Execute SQL statement
@@ -339,7 +339,7 @@ DBASE__open(
                   ");" );
 
         //  Log the database access
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                 "SqLiteCmd: '%s'\n", sqlite_cmd );
 
         //  Execute SQL statement
@@ -378,7 +378,7 @@ DBASE__open(
                   ");" );
 
         //  Log the database access
-        log_write( MID_INFO, "DBASE__open",
+        log_write( MID_LOGONLY, "DBASE__open",
                 "SqLiteCmd: '%s'\n", sqlite_cmd );
 
         //  Execute SQL statement

@@ -209,7 +209,7 @@ MP3__fill_data_buffer(
         else
         {
             //  YES:    Log the file opening
-            log_write( MID_INFO, "MP3__fill_data_buffer",
+            log_write( MID_INFO, "MP3__fill_da...",
                           "Successfully opened file '%s'\n", file_name_p );
         }
     }
