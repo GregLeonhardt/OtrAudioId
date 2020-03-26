@@ -272,7 +272,7 @@ add_file(
         }
         else
         {
-            //  YES:    Add the new file
+            //  YES:    Add the new file information.
             snprintf( file.fingerprint, sizeof( file.fingerprint ),
                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X"
                       "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
@@ -286,27 +286,35 @@ add_file(
                       ( add_rc & 0xFF000000 ) >> 24, ( add_rc & 0x00FF0000 ) >> 16,
                       ( add_rc & 0x0000FF00 ) >>  8, ( add_rc & 0x000000FF ) );
 
-            //  @ToDo   0020    Look in the FILE table for a fingerprint match
-
+            //  This query is only for  fingerprint and episode-id.
             file.network_id = -1;
             file.station_id = -1;
             file.episode_id = episode.episode_id;
-            strncpy( file.date_time, file_info_p->date_time, sizeof( file.date_time ) );
             file.quality    = -1;
-            strncpy( file.location, file_info_p->dir_name, sizeof( file.location ) );
-
 
             //  Is this fingerprint already in the dBase ?
             if ( dbase_get_file( &file ) == true )
             {
-                //  NO:     @ToDo   0008   What to do when FileFingerprint already exists.
-                log_write( MID_FATAL, "add_file",
-                        "File: %8s - EP:%s - '%s' is already in the dBase.\n",
-                            episode.date, episode.number, episode.name );
+                //  NO:     Write a message and continue with the next file.
+                log_write( MID_INFO, "add_file", " \n" );
+                log_write( MID_INFO, "add_file",
+                        "File: %s\n", file_p );
+                log_write( MID_INFO, "add_file", "Has the same fingerprint as:\n" );
+                log_write( MID_INFO, "add_file",
+                        "File: %s\n", file.location );
+                log_write( MID_INFO, "add_file", " \n" );
             }
             else
             {
-                //  NO:     Add this file to the dBase
+                //  NO:     Add the remaining parts of the record
+                file.network_id = -1;
+                file.station_id = -1;
+                file.episode_id = episode.episode_id;
+                strncpy( file.date_time, file_info_p->date_time, sizeof( file.date_time ) );
+                file.quality    = -1;
+                strncpy( file.location, file_p, sizeof( file.location ) );
+
+                //  Put this fingerprint into the FILE table.
                 add_rc = dbase_put_file( &file );
                 if ( add_rc != true )
                 {
