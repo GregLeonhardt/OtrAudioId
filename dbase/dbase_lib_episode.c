@@ -943,9 +943,6 @@ DBASE__update_episode(
         sqlite3_free( sqlite_error_p );
     }
 
-    //  Release the data buffer
-    sqlite3_free( sqlite_cmd_p );
-
     /************************************************************************
      *  Function Exit
      ************************************************************************/

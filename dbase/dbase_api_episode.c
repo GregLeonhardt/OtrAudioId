@@ -122,15 +122,12 @@ dbase_get_episode(
      ************************************************************************/
 
     //  Get an episode record
-    sqlite_rc = DBASE__get_episode( &episode );
+    sqlite_rc = DBASE__get_episode( episode_p );
 
     //  Was the episode record found ?
     if ( sqlite_rc != true )
     {
-        //  NO:     Restore the episode structure to it original
-        memcpy( &episode, episode_p, sizeof( episode ) );
-
-        //  Remove EpisodeDate and EpisodeNumber from the search
+        //  NO:     Remove EpisodeDate and EpisodeNumber from the search
         memset( episode.date,   '\0', sizeof( episode.date ) );
         memset( episode.number, '\0', sizeof( episode.number ) );
 
@@ -142,10 +139,10 @@ dbase_get_episode(
         {
             //  YES:    Ask a human if this is correct
             log_write( MID_INFO, "dbase_get_episode",
-                    "Found Episode:        %4d - %8s - %s\n",
+                    "Found Episode:        %4s - %8s - %s\n",
                     episode.number, episode.date, episode.name );
             log_write( MID_INFO, "dbase_get_episode",
-                    "Looking for Episode:  %4d - %8s - %s\n",
+                    "Looking for Episode:  %4s - %8s - %s\n",
                     episode_p->number, episode_p->date, episode_p->name );
             log_write( MID_INFO, "dbase_get_episode",
                     "Is this correct ? (Yes | No)  ");
@@ -161,6 +158,19 @@ dbase_get_episode(
             {
                 //  Update the Episode record with the changes
                 sqlite_rc = DBASE__update_episode( episode_p, &episode );
+
+                //  Was the update successful
+                if ( sqlite_rc == false )
+                {
+                    //  NO:     0019    What to do following an UPDATE failure.
+                        log_write( MID_FATAL, "dbase_get_episode",
+                            "Episode UPDATE failed.\n" );
+                }
+                else
+                {
+                    //  Run the episode get one last time
+                    sqlite_rc = DBASE__get_episode( episode_p );
+              }
             }
         }
     }

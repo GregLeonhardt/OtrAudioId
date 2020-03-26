@@ -280,8 +280,8 @@ command_line(
          && ( in_dir_name_p        == NULL )
          && ( create_dir_name_p    == NULL ) )
     {
-#if 0
-        in_dir_name_p        = "/home/greg/Music";
+#if 1
+        in_dir_name_p        = "/sdb/OTR/OTRR_Certified_Box_13";
         in_line_parm |= CMD_PARM_ID;
         out_dir_name_p       = "/tmp";
         in_line_parm |= CMD_PARM_OD;

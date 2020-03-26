@@ -285,6 +285,9 @@ add_file(
                       fingerprint[ 18 ], fingerprint[ 19 ],
                       ( add_rc & 0xFF000000 ) >> 24, ( add_rc & 0x00FF0000 ) >> 16,
                       ( add_rc & 0x0000FF00 ) >>  8, ( add_rc & 0x000000FF ) );
+
+            //  @ToDo   0020    Look in the FILE table for a fingerprint match
+
             file.network_id = -1;
             file.station_id = -1;
             file.episode_id = episode.episode_id;
