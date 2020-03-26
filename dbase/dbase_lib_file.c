@@ -131,7 +131,7 @@ DBASE__get_file(
     //  Start building the command
     strncpy( sqlite_cmd,
             "SELECT fingerprint, network_id, station_id, episode_id, "
-            "date, time, quality, location "
+            "date, quality, location "
             "from FILE where ", sizeof( sqlite_cmd ) );
 
     /************************************************************************
@@ -316,12 +316,12 @@ DBASE__get_file(
      *  Command cleanup and run
      ************************************************************************/
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__get_file",
-            "SqLiteCmd: '%s'\n", sqlite_cmd );
-
     //  Perform the query
     sqlite_rc = sqlite3_prepare_v2( otr_db, sqlite_cmd, -1, &sqlite_res_p, 0 );
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__get_file",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
     if( sqlite_rc == SQLITE_OK )
     {
@@ -623,12 +623,12 @@ DBASE__get_file_list(
      *  Command cleanup and run
      ************************************************************************/
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__get_file_list",
-            "SqLiteCmd: '%s'\n", sqlite_cmd );
-
     //  Perform the query
     sqlite_rc = sqlite3_prepare_v2( otr_db, sqlite_cmd, -1, &sqlite_res_p, 0 );
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__get_file_list",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
     if( sqlite_rc == SQLITE_OK )
     {
@@ -797,12 +797,12 @@ DBASE__put_file(
                     file_p->quality,
                     file_p->location );
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__put_file",
-            "SqLiteCmd: '%s'\n", sqlite_cmd_p );
-
     //  Execute the record insertion
     sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd_p, DBASE__callback, 0, &sqlite_error_p);
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__put_file",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd_p );
 
     //  Was the command successful ?
     if( sqlite_rc != SQLITE_OK )

@@ -127,12 +127,12 @@ DBASE__get_show(
             "SELECT show_id, name, state from SHOW where name = '%q';",
                     show_p->name );
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__get_show",
-            "SqLiteCmd: '%s'\n", sqlite_cmd_p );
-
     //  Perform the query
     sqlite_rc = sqlite3_prepare_v2( otr_db, sqlite_cmd_p, -1, &sqlite_res_p, 0 );
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__get_show",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd_p );
 
     if( sqlite_rc == SQLITE_OK )
     {
@@ -221,12 +221,12 @@ DBASE__put_show(
               "INSERT INTO SHOW ( name,state ) VALUES ( '%q', '%d' );",
                     show_p->name, show_p->state );
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__put_show",
-            "SqLiteCmd: '%s'\n", sqlite_cmd_p );
-
     //  Execute the record insertion
     sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd_p, DBASE__callback, 0, &sqlite_error_p);
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__put_show",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd_p );
 
     //  Was the command successful ?
     if( sqlite_rc != SQLITE_OK )

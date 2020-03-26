@@ -240,12 +240,12 @@ DBASE__get_episode(
      *  Command cleanup and run
      ************************************************************************/
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__get_episode",
-            "SqLiteCmd: '%s'\n", sqlite_cmd );
-
     //  Perform the query
     sqlite_rc = sqlite3_prepare_v2( otr_db, sqlite_cmd, -1, &sqlite_res_p, 0 );
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__get_episode",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
     if( sqlite_rc == SQLITE_OK )
     {
@@ -468,12 +468,12 @@ DBASE__get_episode_list(
      *  Command cleanup and run
      ************************************************************************/
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__get_episode_list",
-            "SqLiteCmd: '%s'\n", sqlite_cmd );
-
     //  Perform the query
     sqlite_rc = sqlite3_prepare_v2( otr_db, sqlite_cmd, -1, &sqlite_res_p, 0 );
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__get_episode_list",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
     if( sqlite_rc == SQLITE_OK )
     {
@@ -636,12 +636,12 @@ DBASE__put_episode(
                     episode_p->number,
                     episode_p->available );
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__put_episode",
-            "SqLiteCmd: '%s'\n", sqlite_cmd_p );
-
     //  Execute the record insertion
     sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd_p, DBASE__callback, 0, &sqlite_error_p);
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__put_episode",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd_p );
 
     //  Was the command successful ?
     if( sqlite_rc != SQLITE_OK )
@@ -925,12 +925,12 @@ DBASE__update_episode(
     //  Append the command termination string to the complete command.
     strncat( sqlite_cmd, ";", ( sizeof( sqlite_cmd ) - strlen( sqlite_cmd ) ) );
 
-    //  Log the database access
-    log_write( MID_LOGONLY, "DBASE__update_episode",
-            "SqLiteCmd: '%s'\n", sqlite_cmd );
-
     //  Execute the record insertion
     sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_error_p);
+
+    //  Log the database access
+    log_write( MID_LOGONLY, "DBASE__update_episode",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
     //  Was the command successful ?
     if( sqlite_rc != SQLITE_OK )

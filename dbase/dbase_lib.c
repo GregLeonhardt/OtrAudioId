@@ -179,7 +179,7 @@ DBASE__open(
      *  Create the tools directory if it doesn't already exist
      ************************************************************************/
 
-    //  @ToDo:  0010   When the '.LibTools' directory does not exist.
+    //  @ToDo   0010    When the '.LibTools' directory does not exist.
 
 
     /************************************************************************
@@ -234,12 +234,12 @@ DBASE__open(
                       "name             TEXT      NOT NULL UNIQUE"
                   ");" );
 
-        //  Log the database access
-        log_write( MID_LOGONLY, "DBASE__open",
-                "SqLiteCmd: '%s'\n", sqlite_cmd );
-
         //  Execute SQL statement
         sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_err_p);
+
+        //  Log the database access
+        log_write( MID_LOGONLY, "DBASE__open",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
         if( sqlite_rc != SQLITE_OK )
         {
@@ -267,12 +267,12 @@ DBASE__open(
                       "name             TEXT      NOT NULL UNIQUE"
                   ");" );
 
-        //  Log the database access
-        log_write( MID_LOGONLY, "DBASE__open",
-                "SqLiteCmd: '%s'\n", sqlite_cmd );
-
         //  Execute SQL statement
         sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_err_p);
+
+        //  Log the database access
+        log_write( MID_LOGONLY, "DBASE__open",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
         if( sqlite_rc != SQLITE_OK )
         {
@@ -301,12 +301,12 @@ DBASE__open(
                       "state            INTEGER"
                   ");" );
 
-        //  Log the database access
-        log_write( MID_LOGONLY, "DBASE__open",
-                "SqLiteCmd: '%s'\n", sqlite_cmd );
-
         //  Execute SQL statement
         sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_err_p);
+
+        //  Log the database access
+        log_write( MID_LOGONLY, "DBASE__open",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
         if( sqlite_rc != SQLITE_OK )
         {
@@ -338,12 +338,12 @@ DBASE__open(
                       "available        INTEGER"
                   ");" );
 
-        //  Log the database access
-        log_write( MID_LOGONLY, "DBASE__open",
-                "SqLiteCmd: '%s'\n", sqlite_cmd );
-
         //  Execute SQL statement
         sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_err_p);
+
+        //  Log the database access
+        log_write( MID_LOGONLY, "DBASE__open",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
         if( sqlite_rc != SQLITE_OK )
         {
@@ -377,12 +377,12 @@ DBASE__open(
                       "location         TEXT"
                   ");" );
 
-        //  Log the database access
-        log_write( MID_LOGONLY, "DBASE__open",
-                "SqLiteCmd: '%s'\n", sqlite_cmd );
-
         //  Execute SQL statement
         sqlite_rc = sqlite3_exec( otr_db, sqlite_cmd, DBASE__callback, 0, &sqlite_err_p);
+
+        //  Log the database access
+        log_write( MID_LOGONLY, "DBASE__open",
+            "SqLiteCmd: '(%3d) %s'\n", sqlite_rc, sqlite_cmd );
 
         if( sqlite_rc != SQLITE_OK )
         {
